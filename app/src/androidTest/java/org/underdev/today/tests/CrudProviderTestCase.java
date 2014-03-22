@@ -96,7 +96,19 @@ public abstract class CrudProviderTestCase<T extends ContentProvider> extends Pr
 
         List<ContentValues> databaseValues = contentAsValues(getContentUri());
         assertEquals(1, databaseValues.size());
-        assertEquals(values, databaseValues.get(0));
+        assertValuesMatch(values, databaseValues.get(0));
+    }
+
+    private void assertValuesMatch(ContentValues reference, ContentValues candidate) {
+        assertEquals(reference.size(), candidate.size());
+        assertEquals(reference.keySet(), candidate.keySet());
+
+        for (Map.Entry<String, Object> value : reference.valueSet()) {
+            String keyName = value.getKey();
+            String valueAsString = reference.getAsString(keyName);
+
+            assertEquals(valueAsString, candidate.getAsString(keyName));
+        }
     }
 
     /**
@@ -112,7 +124,7 @@ public abstract class CrudProviderTestCase<T extends ContentProvider> extends Pr
 
             List<ContentValues> itemList = contentAsValues(itemUriForValues(value));
             assertEquals(1, itemList.size());
-            assertEquals(value, itemList.get(0));
+            assertValuesMatch(value, itemList.get(0));
         }
     }
 
@@ -127,7 +139,7 @@ public abstract class CrudProviderTestCase<T extends ContentProvider> extends Pr
         for (ContentValues value : values) {
             List<ContentValues> itemList = contentAsValues(itemUriForValues(value));
             assertEquals(1, itemList.size());
-            assertEquals(value, itemList.get(0));
+            assertValuesMatch(value, itemList.get(0));
         }
     }
 
@@ -162,7 +174,7 @@ public abstract class CrudProviderTestCase<T extends ContentProvider> extends Pr
 
             List<ContentValues> updated = contentAsValues(itemUri);
             assertEquals(1, updated.size());
-            assertEquals(newValues, updated.get(0));
+            assertValuesMatch(newValues, updated.get(0));
         }
     }
 

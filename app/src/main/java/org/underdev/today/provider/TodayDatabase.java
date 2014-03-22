@@ -16,13 +16,18 @@ public class TodayDatabase extends SQLiteOpenHelper {
 
     interface Tables {
         String GOALS = "goals";
-        String TODAY = "today";
-        String TODAY_GOALS = "today_goals";
+        String DAYS = "days";
+        String DAYS_GOALS = "days_goals";
     }
 
     public interface Goals {
         String GOAL_ID   = "goal_id";
         String GOAL_NAME = "goal_name";
+    }
+
+    public interface Days {
+        String DAY_ID     = "day_id";
+        String DAY_START  = "day_start";
     }
 
     public TodayDatabase(Context context) {
@@ -34,13 +39,23 @@ public class TodayDatabase extends SQLiteOpenHelper {
         db.execSQL(String.format(
                 "CREATE TABLE %s (" +
                 "%s TEXT PRIMARY KEY," +
-                "%s TEXT NOT NULL," +
-                "UNIQUE (%s) ON CONFLICT REPLACE)",
+                "%s TEXT NOT NULL)",
                 Tables.GOALS,
                 Goals.GOAL_ID,
-                Goals.GOAL_NAME,
-                Goals.GOAL_ID
+                Goals.GOAL_NAME
         ));
+
+        db.execSQL(String.format(
+                "CREATE TABLE %s (" +
+                "%s TEXT PRIMARY KEY," +
+                "%s INTEGER NOT NULL," +
+                "UNIQUE (%s) ON CONFLICT REPLACE)",
+                Tables.DAYS,
+                Days.DAY_ID,
+                Days.DAY_START,
+                Days.DAY_START
+        ));
+
     }
 
     @Override
@@ -55,6 +70,7 @@ public class TodayDatabase extends SQLiteOpenHelper {
 
         if (currentVersion != newVersion) {
             db.execSQL(String.format("DROP TABLE IF EXISTS %s", Tables.GOALS));
+            db.execSQL(String.format("DROP TABLE IF EXISTS %s", Tables.DAYS));
         }
 
         onCreate(db);

@@ -19,6 +19,10 @@ public class TodayProvider extends ContentProvider {
     private static final int GOALS    = 100;
     private static final int GOALS_ID = 101;
 
+    private static final int DAYS       = 200;
+    private static final int DAYS_ID    = 201;
+    private static final int DAYS_START = 202;
+
     @Override
     public boolean onCreate() {
         this.openHelper = new TodayDatabase(getContext());
@@ -52,6 +56,10 @@ public class TodayProvider extends ContentProvider {
                 db.insertOrThrow(TodayDatabase.Tables.GOALS, null, contentValues);
                 notifyChange(uri);
                 return TodayContract.Goals.buildGoalUri(contentValues.getAsString(TodayDatabase.Goals.GOAL_ID));
+            case DAYS:
+                db.insertOrThrow(TodayDatabase.Tables.DAYS, null, contentValues);
+                notifyChange(uri);
+                return TodayContract.Days.buildDaysUri(contentValues.getAsString(TodayDatabase.Days.DAY_ID));
             default:
                 throw new UnsupportedOperationException("Unknown insertion URI: " + uri);
         }
@@ -83,6 +91,12 @@ public class TodayProvider extends ContentProvider {
                 return TodayContract.Goals.CONTENT_TYPE;
             case GOALS_ID:
                 return TodayContract.Goals.CONTENT_ITEM_TYPE;
+            case DAYS:
+                return TodayContract.Days.CONTENT_TYPE;
+            case DAYS_ID:
+                return TodayContract.Days.CONTENT_ITEM_TYPE;
+            case DAYS_START:
+                return TodayContract.Days.CONTENT_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown URI: " + uri);
         }
@@ -106,6 +120,16 @@ public class TodayProvider extends ContentProvider {
                 String goalId = TodayContract.Goals.getGoalId(uri);
                 return builder.table(TodayDatabase.Tables.GOALS)
                         .where(TodayDatabase.Goals.GOAL_ID + "=?", goalId);
+            case DAYS:
+                return builder.table(TodayDatabase.Tables.DAYS);
+            case DAYS_ID:
+                String dayId = TodayContract.Days.getDayId(uri);
+                return builder.table(TodayDatabase.Tables.DAYS)
+                        .where(TodayDatabase.Days.DAY_ID + "=?", dayId);
+            case DAYS_START:
+                String dayStart = TodayContract.Days.getDayStart(uri);
+                return builder.table(TodayDatabase.Tables.DAYS)
+                        .where(TodayDatabase.Days.DAY_START + "=?", dayStart);
             default:
                 throw new UnsupportedOperationException("Unknown URI for selection builder: " + uri);
         }
@@ -135,6 +159,10 @@ public class TodayProvider extends ContentProvider {
 
         matcher.addURI(authority, TodayContract.PATH_GOAL, GOALS);
         matcher.addURI(authority, TodayContract.PATH_GOAL + "/*", GOALS_ID);
+
+        matcher.addURI(authority, TodayContract.PATH_DAYS, DAYS);
+        matcher.addURI(authority, TodayContract.PATH_DAYS + "/*", DAYS_ID);
+        matcher.addURI(authority, TodayContract.PATH_DAYS + "/start/*", DAYS_ID);
 
         return matcher;
     }
