@@ -12,9 +12,9 @@ import java.util.UUID;
 /**
  * Tests the content Uri described in {@link org.underdev.today.provider.TodayContract.Goals}.
  */
-public class TodayCrudProviderTestCase extends CrudProviderTestCase<TodayProvider> {
+public class GoalProviderTestCase extends CrudProviderTestCase<TodayProvider> {
 
-    public TodayCrudProviderTestCase() {
+    public GoalProviderTestCase() {
         super(TodayProvider.class, TodayContract.CONTENT_AUTHORITY);
     }
 
