@@ -6,6 +6,7 @@ import android.net.Uri;
 import org.underdev.today.provider.TodayContract;
 import org.underdev.today.provider.TodayDatabase;
 import org.underdev.today.provider.TodayProvider;
+import org.underdev.today.provider.pojo.Day;
 
 import java.util.Random;
 import java.util.UUID;
@@ -17,6 +18,14 @@ public class DayProviderTestCase extends CrudProviderTestCase<TodayProvider> {
 
     public DayProviderTestCase() {
         super(TodayProvider.class, TodayContract.CONTENT_AUTHORITY);
+    }
+
+    public void testPojoMapping() {
+        ContentValues content = getRandomContent();
+        Day day = Day.fromContentValues(content);
+        ContentValues mappedValues = day.toContentValues();
+
+        assertEquals(content, mappedValues);
     }
 
     @Override

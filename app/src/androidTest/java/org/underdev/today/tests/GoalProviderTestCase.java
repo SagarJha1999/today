@@ -6,6 +6,7 @@ import android.net.Uri;
 import org.underdev.today.provider.TodayContract;
 import org.underdev.today.provider.TodayDatabase;
 import org.underdev.today.provider.TodayProvider;
+import org.underdev.today.provider.pojo.Goal;
 
 import java.util.UUID;
 
@@ -16,6 +17,14 @@ public class GoalProviderTestCase extends CrudProviderTestCase<TodayProvider> {
 
     public GoalProviderTestCase() {
         super(TodayProvider.class, TodayContract.CONTENT_AUTHORITY);
+    }
+
+    public void testPojoMapping() {
+        ContentValues content = getRandomContent();
+        Goal day = Goal.fromContentValues(content);
+        ContentValues mappedValues = day.toContentValues();
+
+        assertEquals(content, mappedValues);
     }
 
     @Override

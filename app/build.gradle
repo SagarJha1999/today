@@ -20,5 +20,9 @@ android {
 
 dependencies {
     compile 'com.android.support:support-v4:+'
+    compile 'com.google.guava:guava:16.0.1'
+
+    provided 'org.projectlombok:lombok:1.12.6'
+
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
